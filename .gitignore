@@ -139,6 +139,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # Pydev
-#.project
-#.pydevproject
+*.project
+*.pydevproject
 
