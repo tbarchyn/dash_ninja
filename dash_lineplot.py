@@ -30,23 +30,14 @@ app.layout = html.Div([
         ],
         style={'width': '100%', 'display': 'inline-block'}),
     
-    dcc.RangeSlider (
-        id = 'time_slider',
-        min = df['log_time'].min (),
-        max = df['log_time'].max (),
-        step = 1,
-        value = [df['log_time'].min (), df['log_time'].max ()]
-    ), 
-
     dcc.Graph (id = 'plot'),
     ])
 ])
 
 @app.callback(
     dash.dependencies.Output('plot', 'figure'),
-    [dash.dependencies.Input('columns', 'value'),
-     dash.dependencies.Input('time_slider', 'value')])
-def update_graph (column_names, time_range):
+    [dash.dependencies.Input('columns', 'value')])
+def update_graph (column_names):
     '''
     callback to update the graph
     '''
@@ -61,10 +52,10 @@ def update_graph (column_names, time_range):
         'layout': go.Layout(
             xaxis = {
                 'title': 'Log time (s)',
-                'range': [time_range[0], time_range[1]]
+                'rangeslider': dict ()
             },
             yaxis = {
-                'title': 'Value'
+                'title': 'Value',
             },
             margin = {'l': 40, 'b': 40, 't': 10, 'r': 0},
             legend = {'x': 0, 'y': 1},
