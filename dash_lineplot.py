@@ -19,7 +19,6 @@ headers = df.columns
 
 app.layout = html.Div([
     html.Div([
-
         html.Div([
             dcc.Dropdown(
                 id = 'columns',
