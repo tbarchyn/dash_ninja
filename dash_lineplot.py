@@ -40,13 +40,29 @@ app.layout = html.Div([
     ])
 ])
 
+# first plot
 @app.callback(
     dash.dependencies.Output ('plot1', 'figure'),
     [dash.dependencies.Input ('columns1', 'value'),
      dash.dependencies.Input ('display_interval', 'value'),
      dash.dependencies.Input ('auto_update', 'value')])
-def update_graph (column_names, display_interval, auto_update):
+def update_plot1 (column_names, display_interval, auto_update):
+    global df
+    df = update_df (df)         # update the dataframe
     return (lineplot (df, column_names, display_interval, auto_update))
+
+# second plot
+@app.callback(
+    dash.dependencies.Output ('plot2', 'figure'),
+    [dash.dependencies.Input ('columns2', 'value'),
+     dash.dependencies.Input ('display_interval', 'value'),
+     dash.dependencies.Input ('auto_update', 'value')])
+def update_plot2 (column_names, display_interval, auto_update):
+    global df
+    df = update_df (df)         # update the dataframe
+    return (lineplot (df, column_names, display_interval, auto_update))
+
+
 
 if __name__ == '__main__':
     app.run_server ()
