@@ -39,24 +39,30 @@ app.layout = html.Div([
         dcc.Graph (id = 'plot1'),
         dropdown_prototype ('columns2', df),
         dcc.Graph (id = 'plot2'),
+        dcc.Interval (
+            id= 'interval-component',
+            interval = 1 * 1000
+        )
     ])
 ])
 
 # first plot
 @app.callback(
-    dash.dependencies.Output ('plot1', 'figure'),
-    [dash.dependencies.Input ('columns1', 'value'),
-     dash.dependencies.Input ('display_interval', 'value'),
-     dash.dependencies.Input ('auto_update', 'value')])
+    output = dash.dependencies.Output ('plot1', 'figure'),
+    inputs = [dash.dependencies.Input ('columns1', 'value'),
+              dash.dependencies.Input ('display_interval', 'value'),
+              dash.dependencies.Input ('auto_update', 'value')],
+    events = [dash.dependencies.Event ('interval-component', 'interval')])
 def update_plot1 (column_names, display_interval, auto_update):
     return (lineplot (df, column_names, display_interval, auto_update))
 
 # second plot
 @app.callback(
-    dash.dependencies.Output ('plot2', 'figure'),
-    [dash.dependencies.Input ('columns2', 'value'),
-     dash.dependencies.Input ('display_interval', 'value'),
-     dash.dependencies.Input ('auto_update', 'value')])
+    output = dash.dependencies.Output ('plot2', 'figure'),
+    inputs = [dash.dependencies.Input ('columns2', 'value'),
+              dash.dependencies.Input ('display_interval', 'value'),
+              dash.dependencies.Input ('auto_update', 'value')],
+    events = [dash.dependencies.Event ('interval-component', 'interval')])
 def update_plot2 (column_names, display_interval, auto_update):
     return (lineplot (df, column_names, display_interval, auto_update))
 
@@ -64,6 +70,7 @@ def update_plot2 (column_names, display_interval, auto_update):
 
 if __name__ == '__main__':
     # start up the updater thread
+    global df
     updater = dash_updater (df, {'filename': '../sub.csv', 'update_interval': 1.0})
     updater.start ()
     
