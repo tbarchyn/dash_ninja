@@ -10,42 +10,27 @@ import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 
+from dash_lineplot_functions import *
+
 app = dash.Dash ()
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
+# read in the dataframe and get the headers
 df = pd.read_csv ('../sub.csv')    
 headers = df.columns
 
-def dropdown_prototype (id_name):
-    '''
-    method to make dropdown prototype
-    id_name = the html id
-    '''
-    return (
-    html.Div([
-        dcc.Dropdown(
-            id = id_name,
-            options = [{'label': i, 'value': i} for i in df.columns],
-            value = '',
-            multi = True
-            ),
-        ], 
-        style={'width': '100%', 'display': 'inline-block'})
-    )
-
-
+# app layout
 app.layout = html.Div([
     html.Div([
-        dropdown_prototype ('columns1'),
+        dropdown_prototype ('columns1', df),
         dcc.Graph (id = 'plot'),
     ])
 ])
 
 @app.callback(
     dash.dependencies.Output('plot', 'figure'),
-    [dash.dependencies.Input('columns1', 'value')
-     dash.dep])
+    [dash.dependencies.Input('columns1', 'value')])
 def update_graph (column_names):
     '''
     callback to update the graph
