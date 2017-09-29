@@ -28,6 +28,8 @@ def dropdown_prototype (id_name, df):
         style={'width': '100%', 'display': 'inline-block'})
     )
 
+
+
 def update_df (df):
     '''
     method to update the dataframe

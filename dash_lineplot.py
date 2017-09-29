@@ -23,6 +23,10 @@ headers = df.columns
 # app layout
 app.layout = html.Div([
     html.Div([
+        html.Label ('Seconds to display (s):  '),
+        dcc.Input (type = 'text', id = 'display_interval', value = '60'),
+        html.Button ('Pause updates', id = 'pause'),
+        html.Button ('Resume updates', id = 'resume'),
         dropdown_prototype ('columns1', df),
         dcc.Graph (id = 'plot'),
     ])
