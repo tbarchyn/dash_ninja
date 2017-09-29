@@ -17,25 +17,35 @@ app.scripts.config.serve_locally = True
 df = pd.read_csv ('../sub.csv')    
 headers = df.columns
 
+def dropdown_prototype (id_name):
+    '''
+    method to make dropdown prototype
+    id_name = the html id
+    '''
+    return (
+    html.Div([
+        dcc.Dropdown(
+            id = id_name,
+            options = [{'label': i, 'value': i} for i in df.columns],
+            value = '',
+            multi = True
+            ),
+        ], 
+        style={'width': '100%', 'display': 'inline-block'})
+    )
+
+
 app.layout = html.Div([
     html.Div([
-        html.Div([
-            dcc.Dropdown(
-                id = 'columns',
-                options = [{'label': i, 'value': i} for i in df.columns],
-                value = '',
-                multi = True
-            ),
-        ],
-        style={'width': '100%', 'display': 'inline-block'}),
-    
-    dcc.Graph (id = 'plot'),
+        dropdown_prototype ('columns1'),
+        dcc.Graph (id = 'plot'),
     ])
 ])
 
 @app.callback(
     dash.dependencies.Output('plot', 'figure'),
-    [dash.dependencies.Input('columns', 'value')])
+    [dash.dependencies.Input('columns1', 'value')
+     dash.dep])
 def update_graph (column_names):
     '''
     callback to update the graph
