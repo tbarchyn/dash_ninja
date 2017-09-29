@@ -28,6 +28,37 @@ def dropdown_prototype (id_name, df):
         style={'width': '100%', 'display': 'inline-block'})
     )
 
+def lineplot (df, column_names, lookback):
+    '''
+    method to return a plot
+    '''
+    max_x_display = df['log_time'].max ()
+    min_x_display = max_x_display - lookback
+    
+    return {
+        'data': [
+            go.Scatter(
+                x = df ['log_time'],
+                y = df [column_name],
+                name = column_name
+            ) for column_name in column_names
+        ],
+        'layout': go.Layout(
+            xaxis = {
+                'title': 'Log time (s)',
+                'range': [min_x_display, max_x_display],
+                'showgrid': True,
+                'rangeslider': dict ()
+            },
+            yaxis = {
+                'title': 'Value',
+                'showgrid': True,
+            },
+            margin = {'l': 40, 'b': 40, 't': 10, 'r': 0},
+            legend = {'x': 0, 'y': 1},
+            hovermode = 'closest'
+        )
+    }
 
 
 def update_df (df):

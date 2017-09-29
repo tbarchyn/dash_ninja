@@ -28,38 +28,17 @@ app.layout = html.Div([
         html.Button ('Pause updates', id = 'pause'),
         html.Button ('Resume updates', id = 'resume'),
         dropdown_prototype ('columns1', df),
-        dcc.Graph (id = 'plot'),
+        dcc.Graph (id = 'plot1'),
+        dropdown_prototype ('columns2', df),
+        dcc.Graph (id = 'plot2'),
     ])
 ])
 
 @app.callback(
-    dash.dependencies.Output('plot', 'figure'),
+    dash.dependencies.Output('plot1', 'figure'),
     [dash.dependencies.Input('columns1', 'value')])
 def update_graph (column_names):
-    '''
-    callback to update the graph
-    '''
-    return {
-        'data': [
-            go.Scatter(
-                x = df ['log_time'],
-                y = df [column_name],
-                name = column_name
-            ) for column_name in column_names
-        ],
-        'layout': go.Layout(
-            xaxis = {
-                'title': 'Log time (s)',
-                'rangeslider': dict ()
-            },
-            yaxis = {
-                'title': 'Value',
-            },
-            margin = {'l': 40, 'b': 40, 't': 10, 'r': 0},
-            legend = {'x': 0, 'y': 1},
-            hovermode = 'closest'
-        )
-    }
+    return (lineplot (df, column_names, 100))
 
 if __name__ == '__main__':
     app.run_server ()
