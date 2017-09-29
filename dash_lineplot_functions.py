@@ -28,38 +28,52 @@ def dropdown_prototype (id_name, df):
         style={'width': '100%', 'display': 'inline-block'})
     )
 
-def lineplot (df, column_names, lookback):
+def lineplot (df, column_names, display_interval, auto_update):
     '''
     method to return a plot
+    df = the dataframe
+    column_names = the column names to plot
+    display_interval = the display interval in seconds
+    auto_update = the auto_update variable
     '''
-    max_x_display = df['log_time'].max ()
-    min_x_display = max_x_display - lookback
+    if auto_update == 'auto_update':
+        # try to parse the display interval
+        try:
+            display_interval = float (display_interval)
+        except:
+            display_interval = 60.0         # just use default
+        
+        # set up the interval
+        max_x_display = df['log_time'].max ()
+        min_x_display = max_x_display - display_interval
+        
+        return {
+            'data': [
+                go.Scatter(
+                    x = df ['log_time'],
+                    y = df [column_name],
+                    name = column_name
+                ) for column_name in column_names
+            ],
+            'layout': go.Layout(
+                xaxis = {
+                    'title': 'Log time (s)',
+                    'range': [min_x_display, max_x_display],
+                    'showgrid': True,
+                    'rangeslider': dict ()
+                },
+                yaxis = {
+                    'title': 'Value',
+                    'showgrid': True,
+                },
+                margin = {'l': 40, 'b': 40, 't': 10, 'r': 0},
+                legend = {'x': 0, 'y': 1},
+                hovermode = 'closest'
+            )
+        }
     
-    return {
-        'data': [
-            go.Scatter(
-                x = df ['log_time'],
-                y = df [column_name],
-                name = column_name
-            ) for column_name in column_names
-        ],
-        'layout': go.Layout(
-            xaxis = {
-                'title': 'Log time (s)',
-                'range': [min_x_display, max_x_display],
-                'showgrid': True,
-                'rangeslider': dict ()
-            },
-            yaxis = {
-                'title': 'Value',
-                'showgrid': True,
-            },
-            margin = {'l': 40, 'b': 40, 't': 10, 'r': 0},
-            legend = {'x': 0, 'y': 1},
-            hovermode = 'closest'
-        )
-    }
-
+    else:
+        pass                # don't do anything!
 
 def update_df (df):
     '''

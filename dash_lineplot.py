@@ -23,10 +23,16 @@ headers = df.columns
 # app layout
 app.layout = html.Div([
     html.Div([
-        html.Label ('Seconds to display (s):  '),
+        html.Label ('seconds to display backwards in time (s):  '),
         dcc.Input (type = 'text', id = 'display_interval', value = '60'),
-        html.Button ('Pause updates', id = 'pause'),
-        html.Button ('Resume updates', id = 'resume'),
+        dcc.RadioItems(
+            id = 'auto_update',
+            options=[
+                {'label': 'automatically update', 'value': 'auto_update'},
+                {'label': 'stop automatically updating', 'value': 'no_auto_update'},
+            ],
+            value='auto_update'
+        ),
         dropdown_prototype ('columns1', df),
         dcc.Graph (id = 'plot1'),
         dropdown_prototype ('columns2', df),
@@ -35,10 +41,12 @@ app.layout = html.Div([
 ])
 
 @app.callback(
-    dash.dependencies.Output('plot1', 'figure'),
-    [dash.dependencies.Input('columns1', 'value')])
-def update_graph (column_names):
-    return (lineplot (df, column_names, 100))
+    dash.dependencies.Output ('plot1', 'figure'),
+    [dash.dependencies.Input ('columns1', 'value'),
+     dash.dependencies.Input ('display_interval', 'value'),
+     dash.dependencies.Input ('auto_update', 'value')])
+def update_graph (column_names, display_interval, auto_update):
+    return (lineplot (df, column_names, display_interval, auto_update))
 
 if __name__ == '__main__':
     app.run_server ()
