@@ -75,12 +75,3 @@ def lineplot (df, column_names, display_interval, auto_update):
     else:
         pass                # don't do anything!
 
-def update_df (df):
-    '''
-    method to update the dataframe
-    df = the dataframe
-    '''
-    
-    
-    return (df)
-

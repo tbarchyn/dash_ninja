@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 
 from dash_lineplot_functions import *
+from dash_lineplot_updater import *
 
 app = dash.Dash ()
 app.css.config.serve_locally = True
@@ -19,6 +20,7 @@ app.scripts.config.serve_locally = True
 # read in the dataframe and get the headers
 df = pd.read_csv ('../sub.csv')    
 headers = df.columns
+
 
 # app layout
 app.layout = html.Div([
@@ -47,8 +49,6 @@ app.layout = html.Div([
      dash.dependencies.Input ('display_interval', 'value'),
      dash.dependencies.Input ('auto_update', 'value')])
 def update_plot1 (column_names, display_interval, auto_update):
-    global df
-    df = update_df (df)         # update the dataframe
     return (lineplot (df, column_names, display_interval, auto_update))
 
 # second plot
@@ -58,13 +58,14 @@ def update_plot1 (column_names, display_interval, auto_update):
      dash.dependencies.Input ('display_interval', 'value'),
      dash.dependencies.Input ('auto_update', 'value')])
 def update_plot2 (column_names, display_interval, auto_update):
-    global df
-    df = update_df (df)         # update the dataframe
     return (lineplot (df, column_names, display_interval, auto_update))
 
 
 
 if __name__ == '__main__':
-    app.run_server ()
+    # start up the updater thread
+    updater = dash_updater (df, {'filename': '../sub.csv', 'update_interval': 1.0})
+    updater.start ()
     
+    app.run_server ()
     
