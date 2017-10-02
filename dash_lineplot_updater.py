@@ -10,15 +10,15 @@ import numpy as np
 import os
 
 class dash_updater (threading.Thread):
-    def __init__ (self, df, pars):
+    def __init__ (self, pars):
         '''
         dash updater (this runs continuously to update the dataframe)
-        df = the dataframe to update
         pars = the parameter dictionary
         '''
         threading.Thread.__init__(self)
         self.stoprequest = threading.Event ()
-        self.df = df
+        self.df = pd.read_csv ('../sub.csv')    
+        self.df = self.df.ix[0:10, :]                 # cut to the first part
         self.pars = pars
         self.fake_max_row = 100
         return
@@ -42,9 +42,11 @@ class dash_updater (threading.Thread):
         method to update the dataframe
         '''
         
-        # FAKE UPDATES READING FROM DISK
-        df = pd.read_csv (self.pars['filename'])
-        self.df = df.ix [0:self.fake_max_row, :]            # chop the df
+        with threading.Lock ():
+            # update from disk
+            df_raw = pd.read_csv (self.pars['filename'])
+            self.df = df_raw.ix [0:self.fake_max_row, :]            # chop the df
+        
         self.fake_max_row = self.fake_max_row + 10
         print ('updated to: ' + str (self.fake_max_row))
         return

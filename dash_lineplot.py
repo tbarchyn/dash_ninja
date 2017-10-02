@@ -17,6 +17,9 @@ app = dash.Dash ()
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
+updater = dash_updater ({'filename': '../sub.csv', 'update_interval': 1.0})
+
+
 # app layout
 app.layout = html.Div([
     html.Div([
@@ -30,9 +33,9 @@ app.layout = html.Div([
             ],
             value='auto_update'
         ),
-        dropdown_prototype ('columns1', df),
+        dropdown_prototype ('columns1', updater.df),
         dcc.Graph (id = 'plot1'),
-        dropdown_prototype ('columns2', df),
+        dropdown_prototype ('columns2', updater.df),
         dcc.Graph (id = 'plot2'),
         dcc.Interval (
             id= 'interval-component',
@@ -49,7 +52,7 @@ app.layout = html.Div([
               dash.dependencies.Input ('auto_update', 'value')],
     events = [dash.dependencies.Event ('interval-component', 'interval')])
 def update_plot1 (column_names, display_interval, auto_update):
-    return (lineplot (df, column_names, display_interval, auto_update))
+    return (lineplot (updater.df, column_names, display_interval, auto_update))
 
 # second plot
 @app.callback(
@@ -59,18 +62,12 @@ def update_plot1 (column_names, display_interval, auto_update):
               dash.dependencies.Input ('auto_update', 'value')],
     events = [dash.dependencies.Event ('interval-component', 'interval')])
 def update_plot2 (column_names, display_interval, auto_update):
-    return (lineplot (df, column_names, display_interval, auto_update))
+    return (lineplot (updater.df, column_names, display_interval, auto_update))
 
 
 
 if __name__ == '__main__':
-    # read in the dataframe and get the headers
-    df = pd.read_csv ('../sub.csv')    
-    headers = df.columns
-    df = df.ix[0:10, :]                 # cut to the first part
-
-    # start up the updater
-    updater = dash_updater (df, {'filename': '../sub.csv', 'update_interval': 1.0})
+    # read in the dataframe and get the headers    # start up the updater
     updater.start ()
     
     app.run_server ()
