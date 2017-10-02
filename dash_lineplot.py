@@ -17,11 +17,6 @@ app = dash.Dash ()
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
-# read in the dataframe and get the headers
-df = pd.read_csv ('../sub.csv')    
-headers = df.columns
-
-
 # app layout
 app.layout = html.Div([
     html.Div([
@@ -69,8 +64,12 @@ def update_plot2 (column_names, display_interval, auto_update):
 
 
 if __name__ == '__main__':
-    # start up the updater thread
-    global df
+    # read in the dataframe and get the headers
+    df = pd.read_csv ('../sub.csv')    
+    headers = df.columns
+    df = df.ix[0:10, :]                 # cut to the first part
+
+    # start up the updater
     updater = dash_updater (df, {'filename': '../sub.csv', 'update_interval': 1.0})
     updater.start ()
     
