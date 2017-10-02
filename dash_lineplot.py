@@ -32,17 +32,35 @@ app.layout = html.Div([
                 {'label': 'stop automatically updating', 'value': 'no_auto_update'},
             ],
             value='auto_update'
+            ),
+        html.Div([
+            dcc.Dropdown(
+                id = 'scatter_variable',
+                options = [{'label': i, 'value': i} for i in updater.df.columns],
+                value = '',
+            )], 
+            style={'width': '100%', 'display': 'inline-block'}
         ),
+        dcc.Graph (id = 'scatter1'),
         dropdown_prototype ('columns1', updater.df),
         dcc.Graph (id = 'plot1'),
         dropdown_prototype ('columns2', updater.df),
         dcc.Graph (id = 'plot2'),
         dcc.Interval (
             id= 'interval-component',
-            interval = 1 * 1000
+            interval = 1 * 500
         )
     ])
 ])
+
+# first scatterplot
+@app.callback(
+    output = dash.dependencies.Output ('scatter1', 'figure'),
+    inputs = [dash.dependencies.Input ('scatter_variable', 'value'),
+              dash.dependencies.Input ('auto_update', 'value')],
+    events = [dash.dependencies.Event ('interval-component', 'interval')])
+def update_scatter1 (column_name, auto_update):
+    return (scatterplot (updater.df, column_name, auto_update))
 
 # first plot
 @app.callback(
