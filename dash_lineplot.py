@@ -48,7 +48,7 @@ app.layout = html.Div([
         dcc.Graph (id = 'plot2'),
         dcc.Interval (
             id= 'interval-component',
-            interval = 1 * 500
+            interval = 1 * 1000
         )
     ])
 ])
