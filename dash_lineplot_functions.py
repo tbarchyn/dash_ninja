@@ -28,6 +28,43 @@ def dropdown_prototype (id_name, df):
         style={'width': '100%', 'display': 'inline-block'})
     )
 
+def scatterplot (df, column_name, auto_update):
+    '''
+    method to return a scatterplot
+    df = the dataframe
+    column_name = the column name to plot
+    auto_update = the auto_update variable
+    '''
+    if auto_update == 'auto_update':
+        # return vanilla scatterplot
+        return {
+            'data': [
+                go.Scatter(
+                    x = df ['x_utm'],
+                    y = df ['y_utm'],
+                    name = column_name,
+                    mode = 'marker'
+                )
+            ],
+            'layout': go.Layout(
+                xaxis = {
+                    'title': 'x utm (m)',
+                    'showgrid': True,
+                },
+                yaxis = {
+                    'title': 'y utm (m)',
+                    'showgrid': True,
+                },
+                margin = {'l': 40, 'b': 40, 't': 10, 'r': 0},
+                legend = {'x': 0, 'y': 1},
+                hovermode = 'closest',
+            )
+        }
+    
+    else:
+        pass                # don't do anything!
+
+
 def lineplot (df, column_names, display_interval, auto_update):
     '''
     method to return a plot
