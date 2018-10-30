@@ -142,3 +142,7 @@ $RECYCLE.BIN/
 *.project
 *.pydevproject
 
+
+\.idea/dash_ninja\.iml
+
+\.idea/
