@@ -43,7 +43,7 @@ def scatterplot (df, column_name, auto_update):
                     x = df ['x_utm'],
                     y = df ['y_utm'],
                     name = column_name,
-                    mode = 'marker'
+                    mode = 'markers'
                 )
             ],
             'layout': go.Layout(
